@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: userservice
+
+  datasource:
+    url: "jdbc:mysql://localhost:3306/STP_USERS?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true&serverTimezone=UTC"
+    username: root
+    password: "#Sampad009"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  kafka:
+    bootstrap-servers: localhost:9092
+#    consumer:
+#      group-id: account-service-group
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+#      properties:
+#        spring.json.trusted.packages: "*"
+#        spring.json.use.type.headers: false
+#        spring.json.value.default.type: java.util.HashMap
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+
+
+
+server:
+    port: 8081
+
+jwt:
+  secret: y5J4k8XnM5rHqJXbK8u9N2wV7eR3tZcQmF6sLpD1aGhY0bUvTnE2xW9rKsC4jMfQ
+  expiration: 86400000
+  refresh-expiration: 604800000
+
+management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info
+
+
+
+

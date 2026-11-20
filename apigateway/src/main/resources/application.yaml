@@ -1,0 +1,135 @@
+#spring:
+#  application:
+#    name: apigateway
+#
+#  cloud:
+#    gateway:
+#      routes:
+#        #routes
+#        - id: user-service-public
+#          uri: http://localhost:8081
+#          predicates:
+#          - Path=/api/v1/users/register, /api/v1/login
+#        # USER-SERVICE
+#        - id: user-service
+#          uri: http://localhost:8081
+#          predicates:
+#            - Path=/api/v1/users/**
+#          filters:
+#            - name: JwtAuthFilter
+#
+#        # MARKET-SERVICE
+#        - id: market-data-service
+#          uri: http://localhost:8082
+#          predicates:
+#            - Path=/api/v1/market/**
+#          filters:
+#            - name: JwtAuthFilter
+#
+#        # WEB-SOCKET-SERVICE
+#        - id: user-service
+#          uri: http://localhost:8082
+#          predicates:
+#            - Path=/ws/**
+#
+#
+#        # ORDER-SERVICE
+#        - id: order-service
+#          uri: http://localhost:8083
+#          predicates:
+#            - Path=/api/v1/orders/**
+#          filters:
+#            - name: JwtAuthFilter
+#
+#
+#        # PORTFOLIO-SERVICE
+#        - id: portfolio-service
+#          uri: http://localhost:8084
+#          predicates:
+#            - Path=/api/v1/portfolio/**
+#          filters:
+#            - name: JwtAuthFilter
+#
+#server:
+#  port: 8080
+#
+#
+#jwt:
+#  secret: y5J4k8XnM5rHqJXbK8u9N2wV7eR3tZcQmF6sLpD1aGhY0bUvTnE2xW9rKsC4jMfQ
+#  expiration: 86400000
+#  refresh-expiration: 604800000
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,info
+#
+#
+
+spring:
+  application:
+    name: apigateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            # USER-SERVICE (public endpoints, no JWT filter)
+            - id: user-service-public
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/v1/users/register,/api/v1/users/login
+
+            # USER-SERVICE (protected)
+            - id: user-service
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/v1/users/**
+              filters:
+                - JwtAuthFilter
+
+            # MARKET-SERVICE
+            - id: market-data-service
+              uri: http://localhost:8082
+              predicates:
+                - Path=/api/v1/market/**
+              filters:
+                - JwtAuthFilter
+
+            # WEB-SOCKET-SERVICE
+            - id: websocket-service
+              uri: ws://localhost:8082
+              predicates:
+                - Path=/ws/**
+
+            # ORDER-SERVICE
+            - id: order-service
+              uri: http://localhost:8083
+              predicates:
+                - Path=/api/v1/orders/**
+              filters:
+                - JwtAuthFilter
+
+            # PORTFOLIO-SERVICE
+            - id: portfolio-service
+              uri: http://localhost:8084
+              predicates:
+                - Path=/api/v1/portfolio/**
+              filters:
+                - JwtAuthFilter
+
+server:
+  port: 8080
+
+jwt:
+  secret: y5J4k8XnM5rHqJXbK8u9N2wV7eR3tZcQmF6sLpD1aGhY0bUvTnE2xW9rKsC4jMfQ
+  expiration: 86400000
+  refresh-expiration: 604800000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
